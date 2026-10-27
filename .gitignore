@@ -1,0 +1,11 @@
+# 登录态与临时调试产物，不入库
+_auth.json
+_cap*.png
+_cap*.txt
+_dbg*.png
+_debug*.png
+_v_*.png
+_d_*.png
+_doc*.png
+_shot-*.png
+__pycache__/

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CertHub · SSL 证书自动化管理系统</title>
+<meta name="description" content="CertHub 是完全免费的 SSL 证书自动化管理系统，将证书申请、DNS 验证、自动部署与到期续期编排为可视化流水线，支持主流 CA 与 48+ 部署目标。">
+<link rel="icon" href="assets/logo.webp">
+<style>
+:root{
+  --bg:#ffffff;
+  --bg-alt:#f6f8fb;
+  --bg-tint:#f2f7fe;
+  --border:#e7ebf2;
+  --border-strong:#d8dee9;
+  --text:#111827;
+  --text-2:#4b5563;
+  --text-3:#6b7280;
+  --primary:#1a73e8;
+  --primary-dark:#1557b0;
+  --primary-soft:#eaf3fe;
+  --radius:12px;
+  --shadow-sm:0 1px 2px rgba(16,24,40,.04);
+  --shadow:0 1px 3px rgba(16,24,40,.06);
+  --shadow-lg:0 12px 32px -22px rgba(16,24,40,.28);
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --maxw:1180px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Inter","SF Pro Text","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  counter-reset:sec;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+ul{list-style:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:9px;font-size:14.5px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:.18s ease;white-space:nowrap}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-outline{background:#fff;border-color:var(--border-strong);color:var(--text)}
+.btn-outline:hover{background:var(--bg-alt);border-color:#c4ccd9}
+.btn-lg{padding:13px 28px;font-size:15.5px}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:.25s;background:rgba(255,255,255,.85);backdrop-filter:blur(12px)}
+.nav.scrolled{border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:34px;height:34px}
+.brand-name{font-size:18px;font-weight:700;letter-spacing:-.2px}
+.brand-name small{font-size:11px;font-weight:500;color:var(--text-3);display:block;line-height:1.2;letter-spacing:0}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-links a{padding:8px 14px;border-radius:7px;font-size:14.5px;font-weight:500;color:var(--text-2);transition:.15s}
+.nav-links a:hover{color:var(--text);background:var(--bg-alt)}
+.nav-cta{display:flex;align-items:center;gap:10px}
+.burger{display:none;background:#fff;border:1px solid var(--border-strong);border-radius:8px;width:40px;height:40px;cursor:pointer;align-items:center;justify-content:center}
+.burger svg{width:21px;height:21px}
+.mobile-menu{display:none;position:fixed;top:68px;left:0;right:0;z-index:99;background:#fff;border-bottom:1px solid var(--border);padding:10px 20px 18px;box-shadow:var(--shadow)}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;padding:12px 12px;border-radius:8px;font-size:15px;color:var(--text-2)}
+.mobile-menu a:hover{background:var(--bg-alt)}
+
+.hero{padding:140px 0 64px;background-color:#fbfcfe;background-image:linear-gradient(rgba(17,24,39,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(17,24,39,.04) 1px,transparent 1px);background-size:36px 36px;border-bottom:1px solid var(--border)}
+.hero .wrap{position:relative}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:500;color:var(--text-2);background:#fff;border:1px solid var(--border);box-shadow:var(--shadow-sm);margin-bottom:24px}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:#22c55e}
+.hero h1{font-size:clamp(32px,5vw,52px);line-height:1.15;font-weight:800;letter-spacing:-1.2px;margin-bottom:20px}
+.hero h1 .accent{color:var(--primary)}
+.hero .lead{font-size:clamp(16px,1.5vw,18.5px);color:var(--text-2);max-width:660px;margin-bottom:32px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:26px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:20px;color:var(--text-3);font-size:13.5px}
+.hero-meta span{display:inline-flex;align-items:center;gap:6px}
+.hero-meta svg{width:15px;height:15px;color:var(--primary)}
+.hero-shot{margin-top:56px;border-radius:13px;overflow:hidden;border:1px solid var(--border-strong);background:#fff;box-shadow:var(--shadow-lg)}
+.browser-bar{display:flex;align-items:center;gap:7px;padding:11px 16px;background:#f8fafc;border-bottom:1px solid var(--border)}
+.browser-bar i{width:10px;height:10px;border-radius:50%;display:block}
+.browser-bar i:nth-child(1){background:#ff5f57}
+.browser-bar i:nth-child(2){background:#febc2e}
+.browser-bar i:nth-child(3){background:#28c840}
+.browser-url{flex:1;margin-left:12px;height:24px;border-radius:6px;background:#eef1f5;display:flex;align-items:center;padding:0 11px;font-size:12px;color:var(--text-3)}
+.hero-shot img{width:100%}
+
+.stats{padding:40px 0;border-bottom:1px solid var(--border)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.stat{text-align:center;padding:8px 16px}
+.stat+.stat{border-left:1px solid var(--border)}
+.stat::before{content:"";display:block;width:16px;height:2px;background:var(--border-strong);margin:0 auto 12px}
+.stat .num{font-size:clamp(28px,3.2vw,38px);font-weight:800;letter-spacing:-.8px;color:var(--text);font-variant-numeric:tabular-nums}
+.stat .num em{font-style:normal;color:var(--primary)}
+.stat .lab{font-size:14px;color:var(--text-3);margin-top:2px;font-family:var(--mono);letter-spacing:.02em}
+
+.sec-head{text-align:center;max-width:660px;margin:0 auto 52px}
+.sec-tag{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.18em;color:var(--text-3);margin-bottom:16px;counter-increment:sec}
+.sec-tag::before{content:"0" counter(sec) " / ";color:var(--primary)}
+.sec-head h2{font-size:clamp(25px,3.4vw,36px);font-weight:800;letter-spacing:-.6px;margin-bottom:16px;position:relative}
+.sec-head h2::after{content:"";display:block;width:30px;height:2px;background:var(--primary);margin:16px auto 0}
+.sec-head p{color:var(--text-2);font-size:16px}
+
+.features{padding:92px 0}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:feat}
+.feat{position:relative;padding:26px 26px 28px;border-radius:var(--radius);background:#fff;border:1px solid var(--border);transition:border-color .2s}
+.feat:hover{border-color:var(--border-strong)}
+.feat::after{counter-increment:feat;content:"0" counter(feat);position:absolute;top:24px;right:26px;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.08em;color:#b6bfcc}
+.feat h3{font-size:17.5px;font-weight:700;margin-bottom:9px;padding-right:34px}
+.feat p{color:var(--text-2);font-size:14.5px}
+
+.demo{padding:92px 0;background:var(--bg-alt);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.demo-box{display:grid;grid-template-columns:280px 1fr;gap:22px}
+.demo-tabs{display:flex;flex-direction:column;gap:8px}
+.demo-tab{display:flex;gap:12px;align-items:center;text-align:left;padding:14px 15px;border-radius:10px;background:#fff;border:1px solid var(--border);cursor:pointer;transition:.18s}
+.demo-tab:hover{border-color:var(--border-strong)}
+.demo-tab.active{border-color:var(--primary);background:var(--primary-soft)}
+.demo-tab .dt-no{width:34px;flex-shrink:0;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text-3);letter-spacing:.06em}
+.demo-tab.active .dt-no{color:var(--primary)}
+.demo-tab .dt-t{font-size:14.5px;font-weight:600}
+.demo-stage{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border-strong);background:#fff;box-shadow:var(--shadow-lg)}
+.demo-stage .stage-img{position:relative;height:520px}
+.demo-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;opacity:0;transition:opacity .3s}
+.demo-stage img.active{opacity:1}
+.demo-caption{padding:15px 20px;border-top:1px solid var(--border);border-left:2px solid var(--primary);background:#fff;font-size:14px;color:var(--text-2)}
+
+.ecosystem{padding:92px 0}
+.eco-group{margin-bottom:46px}
+.eco-group:last-child{margin-bottom:0}
+.eco-title{display:flex;align-items:center;gap:13px;font-size:14px;font-weight:600;color:var(--text-3);margin-bottom:20px}
+.eco-title::before{content:"";width:14px;height:2px;background:var(--primary)}
+.eco-title::after{content:"";flex:1;height:1px;background:var(--border)}
+.eco-title .e-count{color:var(--text-3);font-weight:500;font-size:13px;font-family:var(--mono);letter-spacing:.04em}
+.eco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:12px}
+.eco-item{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 8px;border-radius:11px;background:#fff;border:1px solid var(--border);transition:border-color .18s}
+.eco-item:hover{border-color:var(--border-strong)}
+.eco-item img{width:40px;height:40px;object-fit:contain}
+.eco-item .e-name{font-size:12.5px;color:var(--text-2);text-align:center;font-weight:500}
+
+/* 工作流程（带装饰） */
+.flow{position:relative;padding:92px 0;background:#f7f9fc;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden}
+.flow-bg{position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(17,24,39,.07) 1px,transparent 0);background-size:28px 28px;pointer-events:none}
+.flow-track{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.flow-line{position:absolute;top:36px;left:10%;right:10%;height:0;border-top:1px dashed #c9d2df;z-index:0}
+.flow-step{position:relative;z-index:1;text-align:center}
+.flow-icon{width:72px;height:72px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--border-strong);font-family:var(--mono);font-size:19px;font-weight:700;color:var(--primary);letter-spacing:.02em}
+.flow-step h4{font-size:16px;font-weight:700;margin-bottom:8px}
+.flow-step p{font-size:13.5px;color:var(--text-2);padding:0 6px}
+
+.faq{padding:92px 0}
+.faq-list{max-width:780px;margin:0 auto;counter-reset:faq}
+.faq-item{border:1px solid var(--border);border-radius:11px;margin-bottom:11px;background:#fff;overflow:hidden}
+.faq-item:hover{border-color:var(--border-strong)}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:flex-start;gap:14px;padding:18px 22px;background:none;border:none;color:var(--text);font-size:15.5px;font-weight:600;cursor:pointer;text-align:left;font-family:inherit}
+.faq-q::before{counter-increment:faq;content:"0" counter(faq);flex-shrink:0;width:26px;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.06em;color:#b6bfcc}
+.faq-item.open .faq-q::before{color:var(--primary)}
+.faq-q .chev{flex-shrink:0;width:20px;height:20px;transition:.25s;color:var(--text-3);margin-left:auto}
+.faq-item.open .chev{transform:rotate(180deg);color:var(--primary)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s}
+.faq-a p{padding:0 22px 20px;color:var(--text-2);font-size:14.5px}
+
+.cta{padding:40px 0 96px}
+.cta-box{position:relative;text-align:center;padding:64px 30px;border-radius:18px;background:#fafbfd;border:1px solid var(--border)}
+.cta-box::before,.cta-box::after{content:"";position:absolute;width:18px;height:18px;border:2px solid var(--primary);opacity:.55}
+.cta-box::before{top:14px;left:14px;border-right:none;border-bottom:none}
+.cta-box::after{bottom:14px;right:14px;border-left:none;border-top:none}
+.cta-box h2{font-size:clamp(24px,3.4vw,34px);font-weight:800;letter-spacing:-.5px;margin-bottom:13px}
+.cta-box p{color:var(--text-2);font-size:16.5px;margin-bottom:30px}
+.cta-box .hero-actions{justify-content:center}
+
+.footer{border-top:1px solid var(--border);padding:58px 0 30px;background:#fafbfd}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:36px;margin-bottom:42px}
+.footer-brand p{color:var(--text-2);font-size:14px;margin:16px 0 18px;max-width:320px}
+.footer h5{font-size:13.5px;font-weight:700;margin-bottom:15px;color:var(--text)}
+.footer li{margin-bottom:10px}
+.footer li a{color:var(--text-2);font-size:14px;transition:.15s}
+.footer li a:hover{color:var(--primary)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--text-3);font-size:13px}
+.footer-bottom span{font-family:var(--mono);letter-spacing:.03em}
+.footer-bottom span:last-child::before{content:"— ";color:var(--primary)}
+.footer-social{display:flex;gap:9px}
+.footer-social a{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--border);transition:.15s}
+.footer-social a:hover{border-color:var(--border-strong);background:var(--bg-alt)}
+.footer-social svg{width:17px;height:17px;color:var(--text-2)}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal.d1{transition-delay:.07s}
+.reveal.d2{transition-delay:.14s}
+.reveal.d3{transition-delay:.21s}
+
+@media(max-width:1024px){
+  .feat-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .demo-box{grid-template-columns:1fr}
+  .demo-tabs{flex-direction:row;flex-wrap:wrap}
+  .demo-tab{flex:1;min-width:160px}
+  .demo-stage .stage-img{height:420px}
+  .flow-line{display:none}
+  .flow-track{grid-template-columns:repeat(2,1fr);gap:28px 16px}
+}
+@media(max-width:768px){
+  .nav-links,.nav-cta .btn-outline{display:none}
+  .burger{display:flex}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:22px 12px}
+  .stat+.stat{border-left:none}
+  .feat-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr;gap:28px}
+  .hero{padding:112px 0 52px}
+  .flow-track{grid-template-columns:1fr}
+}
+@media(max-width:420px){
+  .wrap{padding:0 18px}
+  .eco-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-actions .btn{flex:1;justify-content:center}
+  .demo-stage .stage-img{height:320px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav scrolled" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand">
+      <img src="assets/logo.webp" alt="CertHub Logo">
+      <span class="brand-name">CertHub<small>自动化证书管理</small></span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">产品特性</a>
+      <a href="#demo">功能演示</a>
+      <a href="#ecosystem">生态集成</a>
+      <a href="#flow">工作流程</a>
+      <a href="#faq">常见问题</a>
+      <a href="docs.html">说明文档</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#demo" class="btn btn-outline">查看演示</a>
+      <a href="#cta" class="btn btn-primary">免费开始</a>
+      <button class="burger" id="burger" aria-label="菜单">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features">产品特性</a>
+  <a href="#demo">功能演示</a>
+  <a href="#ecosystem">生态集成</a>
+  <a href="#flow">工作流程</a>
+  <a href="#faq">常见问题</a>
+  <a href="docs.html">说明文档</a>
+  <a href="#cta">免费开始</a>
+</div>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    
+    <h1>SSL 证书，<span class="accent">自动签发、自动部署、自动续期</span></h1>
+    <p class="lead">CertHub 将证书申请、DNS 验证、部署与续期编排为一条可视化流水线。支持 Let's Encrypt 等主流 CA 与 48+ 部署目标，流水线、站点、通知数量均无任何限制。</p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn btn-primary btn-lg">一键免费开始</a>
+      <a href="#demo" class="btn btn-outline btn-lg">查看产品演示</a>
+    </div>
+    <div class="hero-meta">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>永久免费无套餐</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>流水线数量不限</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>支持私有化部署</span>
+    </div>
+    <div class="hero-shot">
+      <div class="browser-bar"><i></i><i></i><i></i><div class="browser-url">http://10.10.12.140/#/certd/dashboard</div></div>
+      <img src="assets/shots/01-dashboard.png" alt="CertHub 工作台真实界面">
+    </div>
+  </div>
+</header>
+
+<section class="stats">
+  <div class="wrap">
+    <div class="stats-grid reveal visible">
+      <div class="stat"><div class="num"><em>48</em>+</div><div class="lab">部署目标插件</div></div>
+      <div class="stat"><div class="num"><em>10</em>+</div><div class="lab">证书签发来源</div></div>
+      <div class="stat"><div class="num"><em>6</em></div><div class="lab">DNS 服务商</div></div>
+      <div class="stat"><div class="num"><em>9</em></div><div class="lab">消息通知渠道</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="sec-head reveal visible">
+      <span class="sec-tag">核心能力</span>
+      <h2>覆盖证书自动化的每个环节</h2>
+      <p>从签发、部署到监控续期，一套平台完成证书全生命周期管理。</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat reveal visible">
+        <h3>ACME 全自动签发</h3>
+        <p>自研 ACME v2 客户端，支持 dns-01 / http-01 挑战与 EAB，对接 Let's Encrypt、Google Trust Services、ZeroSSL、Buypass 等机构。</p>
+      </div>
+      <div class="feat reveal d1 visible">
+        <h3>云厂商免费证书</h3>
+        <p>内置阿里云、腾讯云、火山引擎免费证书申请，自动完成 DNS 验证与签发，无需登录各家控制台。</p>
+      </div>
+      <div class="feat reveal d2 visible">
+        <h3>可视化流水线</h3>
+        <p>阶段与任务以卡片节点呈现，拖拽连线即可编排，支持定时触发、失败转移与流水线分组，复杂流程一目了然。</p>
+      </div>
+      <div class="feat reveal visible">
+        <h3>48+ 部署目标</h3>
+        <p>覆盖 Nginx、Apache、Tomcat、宝塔、群晖、Kubernetes、云 CDN 与对象存储，签发后一键下发并自动重载。</p>
+      </div>
+      <div class="feat reveal d1 visible">
+        <h3>实时签发日志</h3>
+        <p>基于 SSE 的逐行实时日志，词法高亮、阶段标色，点击运行即刻可见，历史记录同样可完整回放。</p>
+      </div>
+      <div class="feat reveal d2 visible">
+        <h3>监控、续期与安全</h3>
+        <p>持续监控站点证书、到期自动续期；凭据 AES-GCM 加密存储，支持登录锁定、TOTP 两步验证与审计日志。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="demo" id="demo">
+  <div class="wrap">
+    <div class="sec-head reveal visible">
+      <span class="sec-tag">产品演示</span>
+      <h2>真实界面，所见即所得</h2>
+      <p>以下均为 CertHub 实际运行界面，点击标签查看不同模块。</p>
+    </div>
+    <div class="demo-box reveal visible">
+      <div class="demo-tabs" id="demoTabs">
+        <button class="demo-tab" data-img="01-dashboard.png" data-cap="工作台：一屏掌握流水线、证书、到期站点与执行成功率，系统资源实时可见。">
+          <span class="dt-no">01</span>
+          <span class="dt-t">工作台</span>
+        </button>
+        <button class="demo-tab active" data-img="08-canvas.png" data-cap="流水线画布：阶段与任务卡片节点化，连线即执行顺序，支持拖拽编排。">
+          <span class="dt-no">02</span>
+          <span class="dt-t">流水线画布</span>
+        </button>
+        <button class="demo-tab" data-img="04-cert.png" data-cap="证书库：统一管理全部证书，域名、签发机构、剩余有效期与入库时间清晰可见。">
+          <span class="dt-no">03</span>
+          <span class="dt-t">证书库</span>
+        </button>
+        <button class="demo-tab" data-img="07-monitor.png" data-cap="站点监控：监控站点证书状态、有效期与最近检测时间，风险站点一目了然。">
+          <span class="dt-no">04</span>
+          <span class="dt-t">站点监控</span>
+        </button>
+        <button class="demo-tab" data-img="05-access.png" data-cap="授权管理：按云厂商、主机、面板与证书签发分类管理凭据，支持一键测试。">
+          <span class="dt-no">05</span>
+          <span class="dt-t">授权管理</span>
+        </button>
+        <button class="demo-tab" data-img="03-history.png" data-cap="执行历史：完整记录每次流水线运行结果、触发方式、耗时与任务数，可随时查看日志。">
+          <span class="dt-no">06</span>
+          <span class="dt-t">执行历史</span>
+        </button>
+      </div>
+      <div class="demo-stage">
+        <div class="browser-bar"><i></i><i></i><i></i><div class="browser-url">http://10.10.12.140</div></div>
+        <div class="stage-img">
+          <img src="assets/shots/01-dashboard.png" class="" alt="工作台真实截图">
+          <img src="assets/shots/08-canvas.png" alt="流水线画布真实截图" loading="lazy" class="active">
+          <img src="assets/shots/04-cert.png" alt="证书库真实截图" loading="lazy" class="">
+          <img src="assets/shots/07-monitor.png" alt="站点监控真实截图" loading="lazy">
+          <img src="assets/shots/05-access.png" alt="授权管理真实截图" loading="lazy">
+          <img src="assets/shots/03-history.png" alt="执行历史真实截图" loading="lazy">
+        </div>
+        <div class="demo-caption" id="demoCaption">流水线画布：阶段与任务卡片节点化，连线即执行顺序，支持拖拽编排。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ecosystem" id="ecosystem">
+  <div class="wrap">
+    <div class="sec-head reveal visible">
+      <span class="sec-tag">生态集成</span>
+      <h2>兼容主流 CA、云厂商与平台</h2>
+      <p>共 53 项内置集成，全部 Logo 均取自项目真实资源，无任何文字占位。</p>
+    </div>
+
+    <!-- ① CA -->
+    <div class="eco-group reveal visible">
+      <div class="eco-title">
+        证书颁发机构 CA<span class="e-count">6 项</span>
+      </div>
+      <div class="eco-grid">
+        <div class="eco-item"><img src="assets/logos/issuer/letsencrypt.svg" alt="Let's Encrypt Logo"><span class="e-name">Let's Encrypt</span></div>
+        <div class="eco-item"><img src="assets/logos/issuer/google.svg" alt="Google Trust Services Logo"><span class="e-name">Google Trust</span></div>
+        <div class="eco-item"><img src="assets/logos/issuer/zerossl.svg" alt="ZeroSSL Logo"><span class="e-name">ZeroSSL</span></div>
+        <div class="eco-item"><img src="assets/logos/issuer/buypass.svg" alt="Buypass Logo"><span class="e-name">Buypass</span></div>
+        <div class="eco-item"><img src="assets/logos/issuer/litessl.svg" alt="LiteSSL Logo"><span class="e-name">LiteSSL</span></div>
+        <div class="eco-item"><img src="assets/logos/issuer/custom.svg" alt="自定义 CA Logo"><span class="e-name">自定义 CA</span></div>
+      </div>
+    </div>
+
+    <!-- ② 云厂商 DNS -->
+    <div class="eco-group reveal visible">
+      <div class="eco-title">
+        云厂商 · DNS 解析<span class="e-count">11 项</span>
+      </div>
+      <div class="eco-grid">
+        <div class="eco-item"><img src="assets/logos/access/aliyun.svg" alt="阿里云 Logo"><span class="e-name">阿里云</span></div>
+        <div class="eco-item"><img src="assets/logos/access/tencentcloud.svg" alt="腾讯云 Logo"><span class="e-name">腾讯云 / DNSPod</span></div>
+        <div class="eco-item"><img src="assets/logos/access/huawei.svg" alt="华为云 Logo"><span class="e-name">华为云</span></div>
+        <div class="eco-item"><img src="assets/logos/access/volcengine.svg" alt="火山引擎 Logo"><span class="e-name">火山引擎</span></div>
+        <div class="eco-item"><img src="assets/logos/access/aws.svg" alt="AWS Logo"><span class="e-name">AWS</span></div>
+        <div class="eco-item"><img src="assets/logos/access/baiducloud.svg" alt="百度智能云 Logo"><span class="e-name">百度智能云</span></div>
+        <div class="eco-item"><img src="assets/logos/access/cloudflare.svg" alt="Cloudflare Logo"><span class="e-name">Cloudflare</span></div>
+        <div class="eco-item"><img src="assets/logos/access/godaddy.svg" alt="GoDaddy Logo"><span class="e-name">GoDaddy</span></div>
+        <div class="eco-item"><img src="assets/logos/access/namesilo.svg" alt="NameSilo Logo"><span class="e-name">NameSilo</span></div>
+        <div class="eco-item"><img src="assets/logos/access/trustasia.svg" alt="TrustAsia Logo"><span class="e-name">TrustAsia</span></div>
+        <div class="eco-item"><img src="assets/logos/access/qiniu.svg" alt="七牛云 Logo"><span class="e-name">七牛云</span></div>
+      </div>
+    </div>
+
+    <!-- ③ CDN 对象存储 -->
+    <div class="eco-group reveal visible">
+      <div class="eco-title">
+        CDN · 对象存储<span class="e-count">11 项</span>
+      </div>
+      <div class="eco-grid">
+        <div class="eco-item"><img src="assets/logos/access/fastly.svg" alt="Fastly Logo"><span class="e-name">Fastly</span></div>
+        <div class="eco-item"><img src="assets/logos/access/ctyun.png" alt="天翼云 Logo"><span class="e-name">天翼云</span></div>
+        <div class="eco-item"><img src="assets/logos/access/jdcloud.png" alt="京东云 Logo"><span class="e-name">京东云</span></div>
+        <div class="eco-item"><img src="assets/logos/access/dogecloud.png" alt="多吉云 Logo"><span class="e-name">多吉云</span></div>
+        <div class="eco-item"><img src="assets/logos/access/yidun.png" alt="网易易盾 Logo"><span class="e-name">易盾 DCDN</span></div>
+        <div class="eco-item"><img src="assets/logos/access/kuocaicdn.png" alt="括彩云 Logo"><span class="e-name">括彩云 CDN</span></div>
+        <div class="eco-item"><img src="assets/logos/access/woai.png" alt="我爱云 Logo"><span class="e-name">我爱云 CDN</span></div>
+        <div class="eco-item"><img src="assets/logos/access/baishan.png" alt="白山云 Logo"><span class="e-name">白山云</span></div>
+        <div class="eco-item"><img src="assets/logos/access/upyun.png" alt="又拍云 Logo"><span class="e-name">又拍云</span></div>
+        <div class="eco-item"><img src="assets/logos/access/s3.svg" alt="S3 Logo"><span class="e-name">S3 兼容存储</span></div>
+        <div class="eco-item"><img src="assets/logos/access/r2.svg" alt="Cloudflare R2 Logo"><span class="e-name">Cloudflare R2</span></div>
+      </div>
+    </div>
+
+    <!-- ④ 主机面板集群 -->
+    <div class="eco-group reveal visible">
+      <div class="eco-title">
+        主机 · 面板 · 集群<span class="e-count">10 项</span>
+      </div>
+      <div class="eco-grid">
+        <div class="eco-item"><img src="assets/logos/access/ssh.svg" alt="SSH Logo"><span class="e-name">主机 SSH</span></div>
+        <div class="eco-item"><img src="assets/logos/access/ftp.svg" alt="FTP Logo"><span class="e-name">FTP 服务器</span></div>
+        <div class="eco-item"><img src="assets/logos/access/baota.png" alt="宝塔面板 Logo"><span class="e-name">宝塔面板</span></div>
+        <div class="eco-item"><img src="assets/logos/access/1panel.svg" alt="1Panel Logo"><span class="e-name">1Panel</span></div>
+        <div class="eco-item"><img src="assets/logos/access/synology.png" alt="群晖 Logo"><span class="e-name">群晖 DSM</span></div>
+        <div class="eco-item"><img src="assets/logos/access/qnap.svg" alt="威联通 Logo"><span class="e-name">威联通 QTS</span></div>
+        <div class="eco-item"><img src="assets/logos/access/proxmox.svg" alt="Proxmox Logo"><span class="e-name">Proxmox VE</span></div>
+        <div class="eco-item"><img src="assets/logos/access/npm.svg" alt="Nginx Proxy Manager Logo"><span class="e-name">NPM</span></div>
+        <div class="eco-item"><img src="assets/logos/access/k8s.svg" alt="Kubernetes Logo"><span class="e-name">Kubernetes</span></div>
+        <div class="eco-item"><img src="assets/logos/access/safeline.svg" alt="雷池 Logo"><span class="e-name">雷池 WAF</span></div>
+      </div>
+    </div>
+
+    <!-- ⑤ 中间件自动化 -->
+    <div class="eco-group reveal visible">
+      <div class="eco-title">
+        中间件部署 · 自动化任务<span class="e-count">15 项</span>
+      </div>
+      <div class="eco-grid">
+        <div class="eco-item"><img src="assets/logos/task/DeployToNginx.svg" alt="Nginx Logo"><span class="e-name">Nginx</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployToApache.svg" alt="Apache Logo"><span class="e-name">Apache</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployToTomcat.svg" alt="Tomcat Logo"><span class="e-name">Tomcat</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployToIis.svg" alt="IIS Logo"><span class="e-name">IIS</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployToHaproxy.svg" alt="HAProxy Logo"><span class="e-name">HAProxy</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployToAwsAcm.svg" alt="AWS ACM Logo"><span class="e-name">AWS ACM</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployToMail.svg" alt="邮件服务器 Logo"><span class="e-name">邮件服务器</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployToOpenwrt.svg" alt="OpenWrt Logo"><span class="e-name">OpenWrt</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployToLocal.svg" alt="本地部署 Logo"><span class="e-name">本地目录</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployToScript.svg" alt="脚本部署 Logo"><span class="e-name">脚本部署</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployToWebhook.svg" alt="Webhook Logo"><span class="e-name">Webhook</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployRunCommand.svg" alt="运行命令 Logo"><span class="e-name">运行命令</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployBackupCerts.svg" alt="备份证书 Logo"><span class="e-name">备份证书</span></div>
+        <div class="eco-item"><img src="assets/logos/task/DeployWait.svg" alt="等待 Logo"><span class="e-name">等待</span></div>
+        <div class="eco-item"><img src="assets/logos/access/eab.svg" alt="EAB 凭据 Logo"><span class="e-name">EAB 凭据</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="flow" id="flow">
+  <div class="flow-bg"></div>
+  <div class="wrap">
+    <div class="sec-head reveal visible">
+      <span class="sec-tag">工作流程</span>
+      <h2>五步开启证书自动化</h2>
+      <p>配置一次，证书自动流转、到期自动续期。</p>
+    </div>
+    <div class="flow-track reveal visible">
+      <div class="flow-line"></div>
+      <div class="flow-step s1">
+        <div class="flow-icon">01</div>
+        <h4>配置授权</h4>
+        <p>填入云厂商、DNS 或主机凭据，AES-GCM 加密存储。</p>
+      </div>
+      <div class="flow-step s2">
+        <div class="flow-icon">02</div>
+        <h4>创建流水线</h4>
+        <p>从内置模板开始，选择 CA、域名与部署目标。</p>
+      </div>
+      <div class="flow-step s3">
+        <div class="flow-icon">03</div>
+        <h4>自动验证</h4>
+        <p>自动写入 DNS / HTTP 验证记录并等待生效。</p>
+      </div>
+      <div class="flow-step s4">
+        <div class="flow-icon">04</div>
+        <h4>签发部署</h4>
+        <p>获取证书链，自动下发到目标并重载服务。</p>
+      </div>
+      <div class="flow-step s5">
+        <div class="flow-icon">05</div>
+        <h4>监控续期</h4>
+        <p>到期前自动续期，多渠道通知，永不过期。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal visible">
+      <span class="sec-tag">常见问题</span>
+      <h2>你可能想了解的问题</h2>
+    </div>
+    <div class="faq-list reveal visible">
+      <div class="faq-item">
+        <button class="faq-q">CertHub 真的完全免费吗？<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+        <div class="faq-a"><p>是的。CertHub 完全免费，无任何付费、授权或套餐模块，不含流水线数量、站点监控数量、通知渠道等任何限制，可自由私有化部署。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">支持哪些证书颁发机构？<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+        <div class="faq-a"><p>通过 ACME 协议对接 Let's Encrypt、Google Trust Services、ZeroSSL、Buypass、LiteSSL 等机构，同时支持阿里云、腾讯云、火山引擎等云厂商免费证书，以及本地自签与自有证书导入。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">证书可以部署到哪些地方？<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+        <div class="faq-a"><p>内置 48 个部署插件，覆盖 Nginx、Apache、Tomcat、HAProxy、IIS 等主机，宝塔、1Panel、群晖、Proxmox、雷池等面板，Kubernetes，以及各类云 CDN 与对象存储，并支持自定义 Webhook。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">凭据和私钥安全吗？<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+        <div class="faq-a"><p>所有凭据与证书私钥均使用 AES-GCM 加密存储，支持登录失败锁定、TOTP 两步验证与完整审计日志。生产环境建议固定密钥，并做好数据目录的备份与权限控制。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">如何快速安装部署？<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+        <div class="faq-a"><p>Windows 双击 start.bat、Linux/macOS 执行 start.sh，脚本会自动创建虚拟环境、安装依赖、构建前端并启动服务，随后访问 http://127.0.0.1:8000，默认管理员账号为 admin / 123456。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="cta">
+  <div class="wrap">
+    <div class="cta-box reveal visible">
+      <span class="sec-tag">立即开始</span>
+      <h2>现在开始，让证书管理自动化</h2>
+      <p>一键脚本启动，几分钟即可拥有完整的证书自动化平台。</p>
+      <div class="hero-actions">
+        <a href="#top" class="btn btn-primary btn-lg">免费下载部署</a>
+        <a href="#features" class="btn btn-outline btn-lg">了解功能特性</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="brand">
+          <img src="assets/logo.webp" alt="CertHub Logo" style="width:32px;height:32px">
+          <span class="brand-name">CertHub<small>自动化证书管理</small></span>
+        </a>
+        <p>基于 FastAPI 与 Vue 3 的 SSL 证书自动化管理系统，覆盖签发、部署、监控与续期全流程，完全免费、无任何限制。</p>
+        <div class="footer-social">
+          <a href="#top" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+          <a href="#top" aria-label="文档"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></a>
+          <a href="#top" aria-label="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a>
+        </div>
+      </div>
+      <div>
+        <h5>产品</h5>
+        <ul>
+          <li><a href="#features">产品特性</a></li>
+          <li><a href="#demo">功能演示</a></li>
+          <li><a href="#ecosystem">生态集成</a></li>
+          <li><a href="#flow">工作流程</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>资源</h5>
+        <ul>
+          <li><a href="docs.html#install">部署文档</a></li>
+          <li><a href="docs.html#security">安全说明</a></li>
+          <li><a href="docs.html">接口文档</a></li>
+          <li><a href="#faq">常见问题</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>技术栈</h5>
+        <ul>
+          <li><a href="#top">Python · FastAPI</a></li>
+          <li><a href="#top">Vue 3 · TypeScript</a></li>
+          <li><a href="#top">ACME v2 协议</a></li>
+          <li><a href="#top">Docker 私有化部署</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 CertHub. 保留所有权利。</span>
+      <span>让每一张证书，都被妥善守护。</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>10));
+const burger=document.getElementById('burger'),mm=document.getElementById('mobileMenu');
+burger.addEventListener('click',()=>mm.classList.toggle('open'));
+mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mm.classList.remove('open')));
+
+const io=new IntersectionObserver((es)=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}});
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+const tabs=document.querySelectorAll('.demo-tab'),imgs=document.querySelectorAll('.demo-stage img'),cap=document.getElementById('demoCaption');
+tabs.forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const f=tab.dataset.img;
+    imgs.forEach(im=>im.classList.toggle('active',im.src.includes(f)));
+    cap.textContent=tab.dataset.cap;
+  });
+});
+
+document.querySelectorAll('.faq-item').forEach(item=>{
+  const q=item.querySelector('.faq-q'),a=item.querySelector('.faq-a');
+  q.addEventListener('click',()=>{
+    if(item.classList.contains('open')){item.classList.remove('open');a.style.maxHeight=0}
+    else{item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px'}
+  });
+});
+</script>
+
+
+</body></html>
