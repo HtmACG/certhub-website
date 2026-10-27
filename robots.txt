@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-# 若绑定自定义域名，请把下面的地址替换为新域名
-Sitemap: https://htmacg.github.io/certhub-website/sitemap.xml
+# 自定义域名：certhub.htmacg.com（CNAME 指向 htmacg.github.io）
+Sitemap: https://certhub.htmacg.com/sitemap.xml
