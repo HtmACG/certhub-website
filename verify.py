@@ -44,10 +44,10 @@ with sync_playwright() as p:
 
     # 交互
     page.set_viewport_size({"width": 1440, "height": 900})
-    page.click('.demo-tab[data-img="05-access.png"]')
+    page.click('.demo-tab[data-img="05-access.webp"]')
     page.wait_for_timeout(500)
     active = page.evaluate("() => document.querySelector('.demo-stage img.active').src.split('/').pop()")
-    print("\n演示切换:", active, "(期望 05-access.png)")
+    print("\n演示切换:", active, "(期望 05-access.webp)")
     page.click('.faq-item .faq-q')
     page.wait_for_timeout(400)
     print("FAQ 展开:", page.evaluate("() => document.querySelector('.faq-item').classList.contains('open')"))

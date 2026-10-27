@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """从本地开发环境（localhost:3006）采集官网演示截图。"""
 import os
+from PIL import Image
 from playwright.sync_api import sync_playwright
 
 SHOT_DIR = "E:/certdsystem/website/assets/shots"
@@ -25,7 +26,11 @@ def clean(page):
 
 def shot(page, name):
     clean(page)
-    page.screenshot(path=f"{SHOT_DIR}/{name}")
+    name = name.replace(".png", "")
+    tmp = f"{SHOT_DIR}/{name}.png"
+    page.screenshot(path=tmp)
+    Image.open(tmp).convert("RGB").save(f"{SHOT_DIR}/{name}.webp", "WEBP", quality=82, method=6)
+    os.remove(tmp)
 
 
 def click_menu(page, text):

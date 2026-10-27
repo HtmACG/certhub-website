@@ -4,6 +4,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CertHub · SSL 证书自动化管理系统</title>
 <meta name="description" content="CertHub 是完全免费的 SSL 证书自动化管理系统，将证书申请、DNS 验证、自动部署与到期续期编排为可视化流水线，支持主流 CA 与 48+ 部署目标。">
+<meta name="author" content="墨韵先知">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#ffffff">
+<link rel="canonical" href="https://htmacg.github.io/certhub-website/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CertHub">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="CertHub · SSL 证书自动化管理系统">
+<meta property="og:description" content="完全免费的 SSL 证书自动化平台：自动申请、DNS 验证、自动部署、到期续期，支持 Let's Encrypt 等主流 CA 与 48+ 部署目标。">
+<meta property="og:url" content="https://htmacg.github.io/certhub-website/">
+<meta property="og:image" content="https://htmacg.github.io/certhub-website/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CertHub 工作台界面">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CertHub · SSL 证书自动化管理系统">
+<meta name="twitter:description" content="完全免费的 SSL 证书自动化平台：自动申请、DNS 验证、自动部署、到期续期。">
+<meta name="twitter:image" content="https://htmacg.github.io/certhub-website/assets/og-cover.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebSite","@id":"https://htmacg.github.io/certhub-website/#website","url":"https://htmacg.github.io/certhub-website/","name":"CertHub","inLanguage":"zh-CN","description":"完全免费的 SSL 证书自动化管理系统","publisher":{"@id":"https://htmacg.github.io/certhub-website/#author"}},
+{"@type":"Person","@id":"https://htmacg.github.io/certhub-website/#author","name":"墨韵先知","url":"https://github.com/HtmACG"},
+{"@type":"SoftwareApplication","name":"CertHub","url":"https://htmacg.github.io/certhub-website/","applicationCategory":"DeveloperApplication","operatingSystem":"Linux, Windows, macOS, Docker","description":"将证书申请、DNS 验证、自动部署与到期续期编排为可视化流水线的 SSL 证书自动化管理系统，支持 Let's Encrypt 等主流 CA 与 48+ 部署目标。","image":"https://htmacg.github.io/certhub-website/assets/og-cover.png","license":"https://www.gnu.org/licenses/gpl-3.0.html","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"author":{"@id":"https://htmacg.github.io/certhub-website/#author"},"featureList":["可视化证书流水线","ACME 自动签发（Let's Encrypt 等）","DNS-01 / HTTP-01 域名验证","48+ 部署目标","到期自动续期","站点监控与多渠道通知"]}
+]}
+</script>
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
@@ -178,6 +203,9 @@ ul{list-style:none}
 .footer li a:hover{color:var(--primary)}
 .footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--text-3);font-size:13px}
 .footer-bottom span{font-family:var(--mono);letter-spacing:.03em}
+.footer-author{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12.5px;color:var(--text-3);letter-spacing:.04em}
+.footer-author img{height:18px;width:auto;opacity:.7;transition:opacity .15s}
+.footer-author:hover img{opacity:1}
 .footer-bottom span:last-child::before{content:"— ";color:var(--primary)}
 .footer-social{display:flex;gap:9px}
 .footer-social a{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--border);transition:.15s}
@@ -240,7 +268,7 @@ ul{list-style:none}
     </div>
     <div class="nav-cta">
       <a href="#demo" class="btn btn-outline">查看演示</a>
-      <a href="#cta" class="btn btn-primary">免费开始</a>
+      <a href="https://github.com/HtmACG/certhub" target="_blank" rel="noopener" class="btn btn-primary">免费开始</a>
       <button class="burger" id="burger" aria-label="菜单">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
@@ -254,7 +282,7 @@ ul{list-style:none}
   <a href="#flow">工作流程</a>
   <a href="#faq">常见问题</a>
   <a href="docs.html">说明文档</a>
-  <a href="#cta">免费开始</a>
+  <a href="https://github.com/HtmACG/certhub" target="_blank" rel="noopener">免费开始</a>
 </div>
 
 <header class="hero" id="top">
@@ -263,7 +291,7 @@ ul{list-style:none}
     <h1>SSL 证书，<span class="accent">自动签发、自动部署、自动续期</span></h1>
     <p class="lead">CertHub 将证书申请、DNS 验证、部署与续期编排为一条可视化流水线。支持 Let's Encrypt 等主流 CA 与 48+ 部署目标，流水线、站点、通知数量均无任何限制。</p>
     <div class="hero-actions">
-      <a href="#cta" class="btn btn-primary btn-lg">一键免费开始</a>
+      <a href="https://github.com/HtmACG/certhub" class="btn btn-primary btn-lg" target="_blank" rel="noopener">一键免费开始</a>
       <a href="#demo" class="btn btn-outline btn-lg">查看产品演示</a>
     </div>
     <div class="hero-meta">
@@ -273,7 +301,7 @@ ul{list-style:none}
     </div>
     <div class="hero-shot">
       <div class="browser-bar"><i></i><i></i><i></i><div class="browser-url">http://10.10.12.140/#/certd/dashboard</div></div>
-      <img src="assets/shots/01-dashboard.png" alt="CertHub 工作台真实界面">
+      <img src="assets/shots/01-dashboard.webp" alt="CertHub 工作台真实界面">
     </div>
   </div>
 </header>
@@ -334,27 +362,27 @@ ul{list-style:none}
     </div>
     <div class="demo-box reveal visible">
       <div class="demo-tabs" id="demoTabs">
-        <button class="demo-tab" data-img="01-dashboard.png" data-cap="工作台：一屏掌握流水线、证书、到期站点与执行成功率，系统资源实时可见。">
+        <button class="demo-tab" data-img="01-dashboard.webp" data-cap="工作台：一屏掌握流水线、证书、到期站点与执行成功率，系统资源实时可见。">
           <span class="dt-no">01</span>
           <span class="dt-t">工作台</span>
         </button>
-        <button class="demo-tab active" data-img="08-canvas.png" data-cap="流水线画布：阶段与任务卡片节点化，连线即执行顺序，支持拖拽编排。">
+        <button class="demo-tab active" data-img="08-canvas.webp" data-cap="流水线画布：阶段与任务卡片节点化，连线即执行顺序，支持拖拽编排。">
           <span class="dt-no">02</span>
           <span class="dt-t">流水线画布</span>
         </button>
-        <button class="demo-tab" data-img="04-cert.png" data-cap="证书库：统一管理全部证书，域名、签发机构、剩余有效期与入库时间清晰可见。">
+        <button class="demo-tab" data-img="04-cert.webp" data-cap="证书库：统一管理全部证书，域名、签发机构、剩余有效期与入库时间清晰可见。">
           <span class="dt-no">03</span>
           <span class="dt-t">证书库</span>
         </button>
-        <button class="demo-tab" data-img="07-monitor.png" data-cap="站点监控：监控站点证书状态、有效期与最近检测时间，风险站点一目了然。">
+        <button class="demo-tab" data-img="07-monitor.webp" data-cap="站点监控：监控站点证书状态、有效期与最近检测时间，风险站点一目了然。">
           <span class="dt-no">04</span>
           <span class="dt-t">站点监控</span>
         </button>
-        <button class="demo-tab" data-img="05-access.png" data-cap="授权管理：按云厂商、主机、面板与证书签发分类管理凭据，支持一键测试。">
+        <button class="demo-tab" data-img="05-access.webp" data-cap="授权管理：按云厂商、主机、面板与证书签发分类管理凭据，支持一键测试。">
           <span class="dt-no">05</span>
           <span class="dt-t">授权管理</span>
         </button>
-        <button class="demo-tab" data-img="03-history.png" data-cap="执行历史：完整记录每次流水线运行结果、触发方式、耗时与任务数，可随时查看日志。">
+        <button class="demo-tab" data-img="03-history.webp" data-cap="执行历史：完整记录每次流水线运行结果、触发方式、耗时与任务数，可随时查看日志。">
           <span class="dt-no">06</span>
           <span class="dt-t">执行历史</span>
         </button>
@@ -362,12 +390,12 @@ ul{list-style:none}
       <div class="demo-stage">
         <div class="browser-bar"><i></i><i></i><i></i><div class="browser-url">http://10.10.12.140</div></div>
         <div class="stage-img">
-          <img src="assets/shots/01-dashboard.png" class="" alt="工作台真实截图">
-          <img src="assets/shots/08-canvas.png" alt="流水线画布真实截图" loading="lazy" class="active">
-          <img src="assets/shots/04-cert.png" alt="证书库真实截图" loading="lazy" class="">
-          <img src="assets/shots/07-monitor.png" alt="站点监控真实截图" loading="lazy">
-          <img src="assets/shots/05-access.png" alt="授权管理真实截图" loading="lazy">
-          <img src="assets/shots/03-history.png" alt="执行历史真实截图" loading="lazy">
+          <img src="assets/shots/01-dashboard.webp" class="" alt="工作台真实截图">
+          <img src="assets/shots/08-canvas.webp" alt="流水线画布真实截图" loading="lazy" class="active">
+          <img src="assets/shots/04-cert.webp" alt="证书库真实截图" loading="lazy" class="">
+          <img src="assets/shots/07-monitor.webp" alt="站点监控真实截图" loading="lazy">
+          <img src="assets/shots/05-access.webp" alt="授权管理真实截图" loading="lazy">
+          <img src="assets/shots/03-history.webp" alt="执行历史真实截图" loading="lazy">
         </div>
         <div class="demo-caption" id="demoCaption">流水线画布：阶段与任务卡片节点化，连线即执行顺序，支持拖拽编排。</div>
       </div>
@@ -560,7 +588,7 @@ ul{list-style:none}
       <h2>现在开始，让证书管理自动化</h2>
       <p>一键脚本启动，几分钟即可拥有完整的证书自动化平台。</p>
       <div class="hero-actions">
-        <a href="#top" class="btn btn-primary btn-lg">免费下载部署</a>
+        <a href="https://github.com/HtmACG/certhub" class="btn btn-primary btn-lg" target="_blank" rel="noopener">免费下载部署</a>
         <a href="#features" class="btn btn-outline btn-lg">了解功能特性</a>
       </div>
     </div>
@@ -577,8 +605,8 @@ ul{list-style:none}
         </a>
         <p>基于 FastAPI 与 Vue 3 的 SSL 证书自动化管理系统，覆盖签发、部署、监控与续期全流程，完全免费、无任何限制。</p>
         <div class="footer-social">
-          <a href="#top" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
-          <a href="#top" aria-label="文档"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></a>
+          <a href="https://github.com/HtmACG/certhub" target="_blank" rel="noopener" aria-label="GitHub 仓库"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+          <a href="docs.html" aria-label="说明文档"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></a>
           <a href="#top" aria-label="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a>
         </div>
       </div>
@@ -612,6 +640,9 @@ ul{list-style:none}
     </div>
     <div class="footer-bottom">
       <span>© 2026 CertHub · 基于 GPL-3.0 开源许可发布</span>
+      <a class="footer-author" href="https://github.com/HtmACG" target="_blank" rel="noopener" aria-label="作者：墨韵先知">
+        <span>by</span><img src="assets/by-moyun.png" alt="墨韵先知 MOYUN XIANZHI">
+      </a>
       <span>让每一张证书，都被妥善守护。</span>
     </div>
   </div>

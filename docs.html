@@ -5,6 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>说明文档 · CertHub</title>
 <meta name="description" content="CertHub 说明文档：安装部署、核心概念、授权配置、证书签发、部署目标、监控续期与安全说明。">
+<meta name="author" content="墨韵先知">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#ffffff">
+<link rel="canonical" href="https://htmacg.github.io/certhub-website/docs.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="CertHub">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="说明文档 · CertHub">
+<meta property="og:description" content="安装部署、核心概念、授权配置、证书签发、部署目标、监控续期与安全说明，一页读完 CertHub 的全部用法。">
+<meta property="og:url" content="https://htmacg.github.io/certhub-website/docs.html">
+<meta property="og:image" content="https://htmacg.github.io/certhub-website/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CertHub 说明文档">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="说明文档 · CertHub">
+<meta name="twitter:description" content="安装部署、核心概念、授权配置、证书签发、部署目标、监控续期与安全说明。">
+<meta name="twitter:image" content="https://htmacg.github.io/certhub-website/assets/og-cover.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://htmacg.github.io/certhub-website/"},{"@type":"ListItem","position":2,"name":"说明文档","item":"https://htmacg.github.io/certhub-website/docs.html"}]},
+{"@type":"TechArticle","headline":"CertHub 说明文档","description":"CertHub 的安装部署、核心概念、授权配置、证书签发、部署目标、监控续期与安全说明。","url":"https://htmacg.github.io/certhub-website/docs.html","inLanguage":"zh-CN","image":"https://htmacg.github.io/certhub-website/assets/og-cover.png","datePublished":"2026-10-27","dateModified":"2026-10-28","author":{"@type":"Person","name":"墨韵先知","url":"https://github.com/HtmACG"},"publisher":{"@type":"Organization","name":"CertHub","logo":{"@type":"ImageObject","url":"https://htmacg.github.io/certhub-website/assets/logo.png"}}}
+]}
+</script>
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
@@ -156,6 +180,9 @@ td:first-child{color:var(--text);font-weight:600}
 .footer-links a:hover{color:var(--primary)}
 .footer-bottom{border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--text-3);font-size:13px}
 .footer-bottom span{font-family:var(--mono);letter-spacing:.03em}
+.footer-author{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12.5px;color:var(--text-3);letter-spacing:.04em}
+.footer-author img{height:18px;width:auto;opacity:.7;transition:opacity .15s}
+.footer-author:hover img{opacity:1}
 .footer-bottom span:last-child::before{content:"— ";color:var(--primary)}
 
 /* 复制成功提示 */
@@ -201,7 +228,7 @@ td:first-child{color:var(--text);font-weight:600}
     </div>
     <div class="nav-cta">
       <a href="index.html#demo" class="btn btn-outline">查看演示</a>
-      <a href="index.html#cta" class="btn btn-primary">免费开始</a>
+      <a href="https://github.com/HtmACG/certhub" target="_blank" rel="noopener" class="btn btn-primary">免费开始</a>
       <button class="burger" id="burger" aria-label="菜单">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
@@ -214,7 +241,7 @@ td:first-child{color:var(--text);font-weight:600}
   <a href="index.html#ecosystem">生态集成</a>
   <a href="index.html#faq">常见问题</a>
   <a href="docs.html">说明文档</a>
-  <a href="index.html#cta">免费开始</a>
+  <a href="https://github.com/HtmACG/certhub" target="_blank" rel="noopener">免费开始</a>
 </div>
 
 <header class="docs-head">
@@ -496,6 +523,9 @@ chmod +x start.sh
     </div>
     <div class="footer-bottom">
       <span>© 2026 CertHub · 基于 GPL-3.0 开源许可发布</span>
+      <a class="footer-author" href="https://github.com/HtmACG" target="_blank" rel="noopener" aria-label="作者：墨韵先知">
+        <span>by</span><img src="assets/by-moyun.png" alt="墨韵先知 MOYUN XIANZHI">
+      </a>
       <span>让每一张证书，都被妥善守护。</span>
     </div>
   </div>
