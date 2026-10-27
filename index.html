@@ -163,6 +163,22 @@ ul{list-style:none}
 .eco-item img{width:40px;height:40px;object-fit:contain}
 .eco-item .e-name{font-size:12.5px;color:var(--text-2);text-align:center;font-weight:500}
 
+/* 证书颁发机构：品牌卡片 */
+.ca-head{text-align:center;max-width:640px;margin:0 auto 32px}
+.ca-eyebrow{display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.22em;color:var(--primary);margin-bottom:14px}
+.ca-head h3{font-size:clamp(22px,2.6vw,28px);font-weight:800;letter-spacing:-.4px;margin-bottom:13px}
+.ca-head p{color:var(--text-2);font-size:14.5px;line-height:1.75}
+.ca-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+.ca-card{flex:0 0 calc((100% - 70px)/6);display:flex;flex-direction:column;align-items:center;gap:12px;padding:28px 16px 24px;background:#fff;border:1px solid var(--border);border-radius:11px;transition:border-color .18s}
+.ca-card:hover{border-color:var(--border-strong)}
+.ca-card img{height:28px;max-width:120px;object-fit:contain}
+.ca-name{font-size:13.5px;font-weight:700;color:var(--text)}
+.ca-desc{font-size:11.5px;color:var(--text-3);text-align:center;line-height:1.5}
+.ca-note{margin-top:22px;text-align:center;font-size:12px;color:#9aa4b2}
+.eco-divider{display:flex;align-items:center;gap:13px;margin:52px 0 34px;font-size:13px;font-weight:600;color:var(--text-3)}
+.eco-divider::before{content:"";width:14px;height:2px;background:var(--border-strong)}
+.eco-divider::after{content:"";flex:1;height:1px;background:var(--border)}
+
 /* 工作流程（带装饰） */
 .flow{position:relative;padding:92px 0;background:#f7f9fc;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden}
 .flow-bg{position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(17,24,39,.07) 1px,transparent 0);background-size:28px 28px;pointer-events:none}
@@ -227,6 +243,7 @@ ul{list-style:none}
   .demo-stage .stage-img{height:420px}
   .flow-line{display:none}
   .flow-track{grid-template-columns:repeat(2,1fr);gap:28px 16px}
+  .ca-card{flex:0 0 calc((100% - 28px)/3)}
 }
 @media(max-width:768px){
   .nav-links,.nav-cta .btn-outline{display:none}
@@ -237,6 +254,7 @@ ul{list-style:none}
   .footer-grid{grid-template-columns:1fr;gap:28px}
   .hero{padding:112px 0 52px}
   .flow-track{grid-template-columns:1fr}
+  .ca-card{flex:0 0 calc((100% - 14px)/2);padding:20px 12px 18px}
 }
 @media(max-width:420px){
   .wrap{padding:0 18px}
@@ -300,7 +318,7 @@ ul{list-style:none}
       <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>支持私有化部署</span>
     </div>
     <div class="hero-shot">
-      <div class="browser-bar"><i></i><i></i><i></i><div class="browser-url">http://10.10.12.140/#/certd/dashboard</div></div>
+      <div class="browser-bar"><i></i><i></i><i></i><div class="browser-url">https://certhub.htmacg.com/#/dashboard</div></div>
       <img src="assets/shots/01-dashboard.webp" alt="CertHub 工作台真实界面">
     </div>
   </div>
@@ -411,20 +429,25 @@ ul{list-style:none}
       <p>共 53 项内置集成，全部 Logo 均取自项目真实资源，无任何文字占位。</p>
     </div>
 
-    <!-- ① CA -->
+    <!-- ① CA：品牌卡片 -->
     <div class="eco-group reveal visible">
-      <div class="eco-title">
-        证书颁发机构 CA<span class="e-count">6 项</span>
+      <div class="ca-head">
+        <span class="ca-eyebrow">TRUSTED CA BRANDS</span>
+        <h3>汇聚主流 SSL 证书品牌</h3>
+        <p>从国际通用 CA 到轻量免费方案，再到企业私有 CA，一个控制台即可按需申请、统一续期。</p>
       </div>
-      <div class="eco-grid">
-        <div class="eco-item"><img src="assets/logos/issuer/letsencrypt.svg" alt="Let's Encrypt Logo"><span class="e-name">Let's Encrypt</span></div>
-        <div class="eco-item"><img src="assets/logos/issuer/google.svg" alt="Google Trust Services Logo"><span class="e-name">Google Trust</span></div>
-        <div class="eco-item"><img src="assets/logos/issuer/zerossl.svg" alt="ZeroSSL Logo"><span class="e-name">ZeroSSL</span></div>
-        <div class="eco-item"><img src="assets/logos/issuer/buypass.svg" alt="Buypass Logo"><span class="e-name">Buypass</span></div>
-        <div class="eco-item"><img src="assets/logos/issuer/litessl.svg" alt="LiteSSL Logo"><span class="e-name">LiteSSL</span></div>
-        <div class="eco-item"><img src="assets/logos/issuer/custom.svg" alt="自定义 CA Logo"><span class="e-name">自定义 CA</span></div>
+      <div class="ca-grid">
+        <div class="ca-card"><img src="assets/logos/issuer/letsencrypt.svg" alt="Let's Encrypt Logo"><span class="ca-name">Let's Encrypt</span><span class="ca-desc">免费开放 CA · ACME 发起者</span></div>
+        <div class="ca-card"><img src="assets/logos/issuer/google.svg" alt="Google Trust Services Logo"><span class="ca-name">Google Trust</span><span class="ca-desc">Google 旗下免费 CA</span></div>
+        <div class="ca-card"><img src="assets/logos/issuer/zerossl.svg" alt="ZeroSSL Logo"><span class="ca-name">ZeroSSL</span><span class="ca-desc">免费 DV 证书 · 支持 ACME</span></div>
+        <div class="ca-card"><img src="assets/logos/issuer/buypass.svg" alt="Buypass Logo"><span class="ca-name">Buypass</span><span class="ca-desc">挪威 CA · 免费 90 天证书</span></div>
+        <div class="ca-card"><img src="assets/logos/issuer/litessl.svg" alt="LiteSSL Logo"><span class="ca-name">LiteSSL</span><span class="ca-desc">轻量 ACME 免费证书</span></div>
+        <div class="ca-card"><img src="assets/logos/issuer/custom.svg" alt="自定义 CA Logo"><span class="ca-name">自定义 CA</span><span class="ca-desc">对接企业 CA 或私有 ACME</span></div>
       </div>
+      <p class="ca-note">以上商标及标识归其各自所有者所有，仅用于标示可在本平台申请的证书品牌。</p>
     </div>
+
+    <div class="eco-divider">部署与集成能力</div>
 
     <!-- ② 云厂商 DNS -->
     <div class="eco-group reveal visible">
