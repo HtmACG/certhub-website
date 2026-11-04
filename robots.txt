@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# 自定义域名：certhub.htmacg.com（CNAME 指向 htmacg.github.io）
 Sitemap: https://certhub.htmacg.com/sitemap.xml

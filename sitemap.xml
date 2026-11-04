@@ -1,15 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://certhub.htmacg.com/</loc>
-    <lastmod>2026-10-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://certhub.htmacg.com/docs.html</loc>
-    <lastmod>2026-10-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-</urlset>
+<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"><url><loc>https://certhub.htmacg.com/changelog.html</loc></url><url><loc>https://certhub.htmacg.com/docs/access.html</loc></url><url><loc>https://certhub.htmacg.com/docs/concept.html</loc></url><url><loc>https://certhub.htmacg.com/docs/deploy.html</loc></url><url><loc>https://certhub.htmacg.com/docs/dev.html</loc></url><url><loc>https://certhub.htmacg.com/docs/</loc></url><url><loc>https://certhub.htmacg.com/docs/install.html</loc></url><url><loc>https://certhub.htmacg.com/docs/issue.html</loc></url><url><loc>https://certhub.htmacg.com/docs/monitor.html</loc></url><url><loc>https://certhub.htmacg.com/docs/notify.html</loc></url><url><loc>https://certhub.htmacg.com/docs/ops.html</loc></url><url><loc>https://certhub.htmacg.com/docs/plugin-dev.html</loc></url><url><loc>https://certhub.htmacg.com/docs/security.html</loc></url><url><loc>https://certhub.htmacg.com/docs/troubleshoot.html</loc></url><url><loc>https://certhub.htmacg.com/ecosystem.html</loc></url><url><loc>https://certhub.htmacg.com/faq.html</loc></url><url><loc>https://certhub.htmacg.com/</loc></url></urlset>
